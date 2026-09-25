@@ -1,10 +1,14 @@
 package edu.hbuas.campustodo.service;
 
+import edu.hbuas.campustodo.model.Priority;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TaskServiceTest {
 
@@ -25,6 +29,48 @@ class TaskServiceTest {
         TaskService service = new TaskService();
 
         assertThrows(IllegalArgumentException.class,
-                () -> service.addTask("   "));
+            () -> service.addTask("   "));
+    }
+
+    // ==== 优先级筛选相关测试 ====
+
+    @Test
+    void addTask_defaultPriority_shouldBeMedium() {
+        TaskService service = new TaskService();
+        var task = service.addTask("默认优先级任务");
+        assertEquals(Priority.MEDIUM, task.getPriority());
+    }
+
+    @Test
+    void filterByPriority_highPriority_onlyHighTasks() {
+        TaskService service = new TaskService();
+        service.addTask("高优任务", Priority.HIGH);
+        service.addTask("中优任务", Priority.MEDIUM);
+        service.addTask("低优任务", Priority.LOW);
+        List<TaskService.Task> result = service.filterByPriority(Priority.HIGH);
+        assertEquals(1, result.size());
+        assertEquals("高优任务", result.get(0).getTitle());
+    }
+
+    @Test
+    void filterByPriority_noMatch_shouldReturnEmptyList() {
+        TaskService service = new TaskService();
+        service.addTask("任务1", Priority.HIGH);
+        List<TaskService.Task> result = service.filterByPriority(Priority.LOW);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void filterByPriority_emptyService_shouldReturnEmptyList() {
+        TaskService service = new TaskService();
+        List<TaskService.Task> result = service.filterByPriority(Priority.HIGH);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void filterByPriority_nullPriority_shouldThrowException() {
+        TaskService service = new TaskService();
+        assertThrows(IllegalArgumentException.class,
+            () -> service.filterByPriority(null));
     }
 }
