@@ -2,7 +2,7 @@
 
 CampusTodo 是《软件工程》课程中用于练习 Git 与 GitHub 团队协同开发的 Java 项目。项目采用 Java 17、Maven 和 JUnit 5，可直接使用 IntelliJ IDEA 打开。
 
-当前版本：支持新增任务和列出任务。
+当前版本：支持新增、列出和按优先级筛选任务
 
 > 重要：上面这一行是合并冲突实验的固定锚点。只有实验任务明确要求时才修改，且不要提前合并其他同学的文字。
 
@@ -30,7 +30,7 @@ CampusTodo 是《软件工程》课程中用于练习 Git 与 GitHub 团队协�
 mvn test
 ```
 
-初始版本应有 2 个测试通过。
+初始版本应有 7 个测试通过。
 
 ## 4. 团队迭代任务
 
@@ -65,3 +65,28 @@ git push origin v0.1.0
 - 作者不能批准自己的 Pull Request；评审意见处理完毕且 CI 通过后再合并。
 - 不提交 `.idea/`、`target/`、访问令牌、账号密码或个人隐私数据。
 - 禁止使用 `git push --force` 修改共享的 `main` 分支。
+
+
+## 7. 协作流程
+
+本项目采用 GitHub Flow 工作流：
+
+1. 从 `main` 分支创建功能分支，命名为 `feature/<issue号>-<主题>`
+2. 在功能分支上提交代码，提交信息格式为 `<type>: <描述>`
+3. 推送分支并创建 Pull Request，关联对应 Issue
+4. CI 通过并取得至少一人 Approve 后，合并到 main
+5. 删除已合并的功能分支
+
+### 分支命名示例
+
+- `feature/1-priority-filter`
+- `feature/2-complete-task`
+
+### 提交信息类型
+
+- `feat`：新功能
+- `test`：测试相关
+- `docs`：文档
+- `fix`：修复
+- `ci`：CI/CD 相关
+- `chore`：杂项
