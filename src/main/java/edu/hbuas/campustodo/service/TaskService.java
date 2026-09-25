@@ -5,6 +5,7 @@ import edu.hbuas.campustodo.model.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * 任务服务。
  */
@@ -70,5 +71,32 @@ public class TaskService {
             }
         }
         return result;
+    }
+
+    /**
+     * 完成指定编号的任务。
+     *
+     * @param id 任务编号
+     * @throws IllegalArgumentException 如果任务不存在
+     * @throws IllegalStateException    如果任务已经完成
+     */
+    public void completeTask(long id) {
+        Task task = findById(id);
+        if (task == null) {
+            throw new IllegalArgumentException("任务不存在: " + id);
+        }
+        if (task.isCompleted()) {
+            throw new IllegalStateException("任务已完成，不能重复完成: " + id);
+        }
+        task.complete();
+    }
+
+    private Task findById(long id) {
+        for (Task task : tasks) {
+            if (task.getId() == id) {
+                return task;
+            }
+        }
+        return null;
     }
 }

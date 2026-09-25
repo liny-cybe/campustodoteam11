@@ -16,9 +16,7 @@ class TaskServiceTest {
     @Test
     void shouldAddTask() {
         TaskService service = new TaskService();
-
         Task task = service.addTask("完成需求评审");
-
         assertEquals(1L, task.getId());
         assertEquals("完成需求评审", task.getTitle());
         assertFalse(task.isCompleted());
@@ -28,7 +26,6 @@ class TaskServiceTest {
     @Test
     void shouldRejectBlankTitle() {
         TaskService service = new TaskService();
-
         assertThrows(IllegalArgumentException.class,
             () -> service.addTask("   "));
     }
@@ -73,5 +70,32 @@ class TaskServiceTest {
         TaskService service = new TaskService();
         assertThrows(IllegalArgumentException.class,
             () -> service.filterByPriority(null));
+    }
+
+    // ==== 任务完成相关测试 ====
+
+    @Test
+    void completeTask_existingTask_shouldMarkCompleted() {
+        TaskService service = new TaskService();
+        Task task = service.addTask("待完成任务");
+        assertFalse(task.isCompleted());
+        service.completeTask(task.getId());
+        assertTrue(task.isCompleted());
+    }
+
+    @Test
+    void completeTask_notExist_shouldThrowException() {
+        TaskService service = new TaskService();
+        assertThrows(IllegalArgumentException.class,
+            () -> service.completeTask(999));
+    }
+
+    @Test
+    void completeTask_alreadyCompleted_shouldThrowException() {
+        TaskService service = new TaskService();
+        Task task = service.addTask("已完成任务");
+        service.completeTask(task.getId());
+        assertThrows(IllegalStateException.class,
+            () -> service.completeTask(task.getId()));
     }
 }
