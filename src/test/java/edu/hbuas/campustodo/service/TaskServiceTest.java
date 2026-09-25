@@ -27,4 +27,30 @@ class TaskServiceTest {
         assertThrows(IllegalArgumentException.class,
                 () -> service.addTask("   "));
     }
+    // ==== 任务完成相关测试 ====
+
+    @Test
+    void completeTask_existingTask_shouldMarkCompleted() {
+        TaskService service = new TaskService();
+        Task task = service.addTask("待完成任务");
+        assertFalse(task.isCompleted());
+        service.completeTask(task.getId());
+        assertTrue(task.isCompleted());
+    }
+
+    @Test
+    void completeTask_notExist_shouldThrowException() {
+        TaskService service = new TaskService();
+        assertThrows(IllegalArgumentException.class,
+            () -> service.completeTask(999));
+    }
+
+    @Test
+    void completeTask_alreadyCompleted_shouldThrowException() {
+        TaskService service = new TaskService();
+        Task task = service.addTask("已完成任务");
+        service.completeTask(task.getId());
+        assertThrows(IllegalStateException.class,
+            () -> service.completeTask(task.getId()));
+    }
 }
